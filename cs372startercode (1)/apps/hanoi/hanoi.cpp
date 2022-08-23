@@ -33,3 +33,4 @@ void printIt(int disk, int fromPeg, int toPeg) {
       << " from pef " << fromPeg
       << " to peg " << toPeg << endl;
 }
+
