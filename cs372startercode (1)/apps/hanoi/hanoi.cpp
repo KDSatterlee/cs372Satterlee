@@ -9,14 +9,18 @@ int main() {
     const int FROMPEG = 1;
     const int TOPEG = 3;
     const int TEMPPEG = 2;
-    const int NUMDISKS = 3;
-    for (auto numdisks: {3,5,6}) {
+    //const int NUMDISKS = 3;
+    auto start = std::chrono::steady_clock::now();
+    for (auto numdisks: {32}) {
       cout << "Numdisks: " << numdisks << endl;
       moveDisks(numdisks, FROMPEG, TOPEG, TEMPPEG);
       cout << "Moved " << numdisks << " pegs"
            << " from peg " << FROMPEG
            << " to peg " << TOPEG << endl;
     }
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    cout << "time elapsed: " << elapsed_seconds.count() << "s\n";
 }
 
 void moveDisks(int num, int fromPeg, int toPeg, int tempPeg) {
