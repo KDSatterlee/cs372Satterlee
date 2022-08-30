@@ -1,6 +1,5 @@
 //
-// File:   myvectest.cpp
-// Author: Your Glorious Instructor
+// Author: Kurtis Satterlee
 // Purpose:
 // Determine behavior and performance of capacity increate in STL vector.
 //
