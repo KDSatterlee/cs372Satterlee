@@ -9,7 +9,8 @@ void printIt(int , char , char );
 void MoveDisksHelper(stack<int> &, stack<int> &, char , char ) ;
 
 int main() {
-  for (auto numdisks: {3,5,6}) {
+ auto start = std::chrono::steady_clock::now();
+  for (auto numdisks: {3, 5, 10, 15, 20, 25, 30, 31, 32, 33}) {
       stack<int> source;
       stack<int> dest;
       stack<int> aux;
@@ -17,6 +18,9 @@ int main() {
       moveDisks(numdisks, source, aux, dest);
       cout << "Moved " << numdisks << " pegs." <<  endl;
     }
+ auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    cout << "time elapsed: " << elapsed_seconds.count() << "s\n";
     return 0;
 }
 
