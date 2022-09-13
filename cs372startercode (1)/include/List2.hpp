@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <iostream>
 template <typename T>
 class List {
 private:
@@ -32,22 +33,12 @@ public:
                 current = current->next;
                 return *this;
             }
-        const_iterator & operator--() {
-            current = current->prev;
-            return *this;
-        }
 
             const_iterator  operator++( int ) {
                 const_iterator old = *this;
                 ++( *this );
                 return old;
             }
-        
-        const_iterator  operator--( int ) {
-            const_iterator old = *this;
-            --( *this );
-            return old;
-        }
 
             bool operator==(const const_iterator & rhs) const {
                 return current == rhs.current;
@@ -57,6 +48,7 @@ public:
             }
     };
 
+public:
     class iterator: public const_iterator {
         protected:
             iterator(Node *p) : const_iterator(p) { }
@@ -77,22 +69,12 @@ public:
                 this->current = const_iterator::current->next;
                 return *this;
             }
-        
-        iterator & operator-- () {
-            this->current = const_iterator::current->prev;
-            return *this;
-        }
 
             iterator operator++ ( int ) {
                 iterator old = *this;
                 ++( *this);
                 return old;
             }
-        iterator operator-- ( int ) {
-            iterator old = *this;
-            --( *this);
-            return old;
-        }
     };
 
 private:
@@ -119,10 +101,10 @@ public:
         head->isHiddenNode = true;
         tail = new Node();
         tail->isHiddenNode = true;
-        head->prev = nullptr;
+        head->prev = tail;
         head->next = tail;
         tail->prev = head;
-        tail->next = nullptr;
+        tail->next = head;
 
     };
     List(T newData) {
@@ -150,10 +132,6 @@ public:
 
     iterator end() { return tail; }
     
-    iterator rbgin() {return {tail->prev};}
-    
-    iterator rend() {return head;};
-    
     const_iterator cbegin() const {
          return {head->next};
      }
@@ -161,32 +139,26 @@ public:
     const_iterator cend() const
      { return {tail}; }
     
-    const_iterator crbegin() const {
-        return {tail->prev};
-    }
-    
-    const_iterator crend() const{
-     { return {head}; }
-    }
-    
-    iterator erase( iterator itr ){
+    iterator erase(iterator itr) {
         Node *p = itr.current;
-        iterator retVal{ p->next };
+        iterator iterToReturn{ p->next };
         p->prev->next = p->next;
         p->next->prev = p->prev;
-        delete p;
-        
-        
-        return retVal;
+        return iterToReturn;
     }
-    
-    iterator erase( iterator from, iterator to ){
-        for( iterator itr = from; itr != to; )
-            itr = erase( itr );
-        
+
+    iterator insert(iterator itr, const T & x) {
+        Node *p = itr.current;
+        Node *newNode = new Node{x, p->prev, p};
+        p->prev = p->prev->next = newNode;
+    }
+    iterator erase(iterator from, iterator to) {
+        iterator itr = from;
+        while (itr != to) {
+            itr = erase(itr);
+        }
         return to;
     }
-        
     // And the methods for the rest
     void push_front(T data) {
         if (this->empty()){
@@ -220,7 +192,7 @@ public:
             tail->prev = newNode;
         }
     }
-    T &front() {
+    T front() {
         Node *actualHead = head->next;
         return (actualHead->data);
     }
@@ -228,21 +200,42 @@ public:
         Node *actualTail = tail->prev;
         return (actualTail->data);
     }
+    
     void pop_back() {
-        Node *lastNode = tail->prev;
-        tail->prev = lastNode->prev;
-        Node *newLastNode = tail->prev;
-        newLastNode->next = tail;
-        delete lastNode;
-        lastNode = nullptr;
+        if (!empty()) {
+            Node *lastNode = tail->prev;
+            tail->prev = lastNode->prev;
+            Node *newLastNode = tail->prev;
+            newLastNode->next = tail;
+            delete lastNode;
+            lastNode = nullptr;
+        }
+        else {
+            std::cerr << "pop_back(): Attempt to pop from empty list. " << std::endl;
+        }
     }
     void pop_front() {
-        Node *firstNode = head->next;
-        head->next = firstNode->next;
-        Node *newFirstNode = head->next;
-        newFirstNode->prev = head;
-        delete firstNode;
-        firstNode = nullptr;
+        if (!empty()) {
+            Node *firstNode = head->next;
+            head->next = firstNode->next;
+            Node *newFirstNode = head->next;
+            newFirstNode->prev = head;
+            delete firstNode;
+            firstNode = nullptr;
+        }
+        else {
+            std::cerr << "pop_back(): Attempt to pop from empty list. " << std::endl;
+        }
+    }
+    void circle(iterator itr){
+        Node *p =itr.current;
+        while (p != itr.current->prev) {
+            //doIt(p->data);
+            std::cout << p->data << " ";
+            p = p->next;
+        }
+        std:: cout<<std::endl;
+        
     }
     void traverse(std::function<void(T &data)> doIt) {
         Node *current = head->next;
