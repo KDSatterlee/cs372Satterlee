@@ -10,6 +10,7 @@
 // tree that only contains values less than our value and right.subtree is a
 // binary search tree that only contains values larger than our value.
 //
+//ref geeksforgeeks.org/deletion-binary-tree/
 #pragma once
 
 #include <memory>
@@ -35,6 +36,7 @@ class Tree
         std::shared_ptr<const Node> _lft;
         T _val;
         std::shared_ptr<const Node> _rgt;
+        
     };
 
     //
@@ -43,6 +45,8 @@ class Tree
     //
     explicit Tree(std::shared_ptr<const Node> const & node)
       : _root(node) {}
+        
+  
 
 public:
     //
@@ -112,27 +116,91 @@ public:
         else
             return *this; // no duplicates
     }
-    
-    void deleatNode(T x){
-        if(isEmpty()){
-            return;
-        }
-        T y= root();
-        if(x <y ){
-            void(left().deleatNode(x));
-        }
-        else if(x>y){
-            void(right().deleatNode(x));
-        }
-        else if(right().member(x)!=isEmpty() && left().member(x)!=isEmpty()){
-            if (x<y) {
-                deleatNode(left().member(x));
+    void deletDeepest(struct Node* root,
+                      struct Node* d_node)
+    {
+        queue<struct Node*> q;
+        q.push(root);
+     
+        // Do level order traversal until last node
+        struct Node* temp;
+        while (!q.empty()) {
+            temp = q.front();
+            q.pop();
+            if (temp == d_node) {
+                temp = NULL;
+                delete (d_node);
+                return;
             }
-            else if(x>y){
-                deleatNode(right().member(x));
+            if (temp->right) {
+                if (temp->right == d_node) {
+                    temp->right = NULL;
+                    delete (d_node);
+                    return;
+                }
+                else
+                    q.push(temp->right);
+            }
+     
+            if (temp->left) {
+                if (temp->left == d_node) {
+                    temp->left = NULL;
+                    delete (d_node);
+                    return;
+                }
+                else
+                    q.push(temp->left);
             }
         }
     }
+    
+     Node* deleate(struct Node* _root,T x){
+        if(_root == NULL){
+            return NULL;
+        }
+         
+         queue<struct Node*> q;
+            q.push(root);
+         
+            struct Node* temp;
+            struct Node* key_node = NULL;
+         
+            // Do level order traversal to find deepest
+            // node(temp) and node to be deleted (key_node)
+            while (!q.empty()) {
+                temp = q.front();
+                q.pop();
+         
+                if (temp->x == x)
+                    key_node = temp;
+         
+                if (temp->left)
+                    q.push(temp->left);
+         
+                if (temp->right)
+                    q.push(temp->right);
+            }
+         
+            if (key_node != NULL) {
+                int x = temp->x;
+                deletDeepest(_root, temp);
+                x_node->x = x;
+            }
+            return _root;
+        }
+    
+    /*Tree deleatNode(T x){
+        if (isEmpty())
+            return Tree(Tree(), x, Tree());
+        T y = root();
+        //int temp = 3;
+        if(y > x){
+          //  T test =left();
+            
+        }
+        else
+           // return *this; // no duplicates
+    }*/
 
 
 
@@ -171,6 +239,13 @@ public:
     }
 
     void postorder(std::function<void(T)> visit) const {
+        if (isEmpty()) return;
+        left().postorder(visit);
+        right().postorder(visit);
+        T contents = root();
+        visit(contents);
+    }
+    void postorder2(std::function<void(T)> visit) const {
         if (isEmpty()) return;
         left().postorder(visit);
         right().postorder(visit);
