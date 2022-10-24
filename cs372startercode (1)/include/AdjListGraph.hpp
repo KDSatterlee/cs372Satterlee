@@ -1,9 +1,4 @@
-//
-//  File:   AdjListGraph.hpp
-//  Author: Your Glorious Instructor
-//  Purpose:
-//  Implementation of the adjacency list implementation of the graph ADT
-//
+
 
 #include "Graph.hpp"
 #include <map>
