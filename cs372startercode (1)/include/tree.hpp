@@ -16,6 +16,8 @@
 #include <memory>
 #include <functional>
 #include <cassert>
+#include <queue>
+#include <iostream>
 using namespace std;
 
 template<class T>
@@ -91,7 +93,8 @@ public:
         return Tree(_root->_lft);
     }
 
-    Tree right() const {
+    Tree
+    right() const {
         assert(!isEmpty());
         return Tree(_root->_rgt);
     }
@@ -116,7 +119,13 @@ public:
         else
             return *this; // no duplicates
     }
-    void deletDeepest(struct Node* root,
+    Tree remove( const T & x )
+        {
+            remove( x, root());
+        }
+    
+    
+  /*  void deletDeepest(struct Node* root,
                       struct Node* d_node)
     {
         queue<struct Node*> q;
@@ -187,7 +196,7 @@ public:
                 x_node->x = x;
             }
             return _root;
-        }
+        }*/
     
     /*Tree deleatNode(T x){
         if (isEmpty())
@@ -215,6 +224,30 @@ public:
         else
             return true;
     }
+    
+    void remove( const T & x, Tree * & t )
+       {
+           if( t == nullptr )
+               return;   // Item not found; do nothing
+           
+           if( x < t->element )
+               remove( x, t->left );
+           else if( t->element < x )
+               remove( x, t->right );
+           else if( t->left != nullptr && t->right != nullptr ) // Two children
+           {
+               t->element = findMin( t->right )->element;
+               remove( t->element, t->right );
+           }
+           else
+           {
+               Tree *oldNode = t;
+               t = ( t->left != nullptr ) ? t->left : t->right;
+               delete oldNode;
+           }
+           
+           balance( t );
+       }
 
     //
     // For each of traversal functions, we assume that the parameter is a
@@ -245,16 +278,45 @@ public:
         T contents = root();
         visit(contents);
     }
-    void postorder2(std::function<void(T)> visit) const {
-        if (isEmpty()) return;
-        left().postorder(visit);
-        right().postorder(visit);
-        T contents = root();
-        visit(contents);
+    
+    void levelTrnsveral(std::function<void(T)> visit){
+        
+        if(isEmpty()) return;
+        queue<T> test;
+        T contents = giveMeStuff(test.front());
+        
+        
+        
+        
+        
+        
     }
+    void makeEmoty(Tree * & x){
+        if(x != nullptr ){
+            left().makeEmoty(x);
+            right().makeEmoty(x);
+            delete x;
+        }
+        x = nullptr;
+    }
+    int giveMeStuff(T x){
+        T contents = root();
+        if(contents != x){
+            left().giveMeStuff(x);
+        }
+        return contents;
+    }
+  
+    
+    
+    
+   
+        
+    
     
 private:
     std::shared_ptr<const Node> _root;
+    
 };
 
 
