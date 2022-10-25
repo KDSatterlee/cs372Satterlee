@@ -23,6 +23,8 @@ public:
     virtual void addNode(N x) = 0;
     virtual void addEdge(N x, N y) = 0;
     virtual void deleateEdge(N x, N y) = 0;
+    void dfs(N startNode);
+    void bfs(N startNode);
     
 };
 #endif /* graph_hpp */

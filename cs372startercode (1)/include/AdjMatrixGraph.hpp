@@ -117,5 +117,58 @@ public:
     }
         
     };
+void bfs(int start)
+{
+    // Visited vector to so that
+    // a vertex is not visited more than once
+    // Initializing the vector to false as no
+    // vertex is visited at the beginning
+    vector<bool> visited(adj.size(), false);
+    vector<int> q;
+    q.push_back(start);
+  
+    // Set source as visited
+    visited[start] = true;
+  
+    int vis;
+    while (!q.empty()) {
+        vis = q[0];
+  
+        // Print the current node
+        cout << vis << " ";
+        q.erase(q.begin());
+  
+        // For every adjacent vertex to the current vertex
+        for (int i = 0; i < adj[vis].size(); i++) {
+            if (adj[vis][i] == 1 && (!visited[i])) {
+  
+                // Push the adjacent node to the queue
+                q.push_back(i);
+  
+                // Set
+                visited[i] = true;
+            }
+        }
+    }
+}
+void dfs(int start, vector<bool>& visited)
+{
+ 
+    // Print the current node
+    cout << start << " ";
+ 
+    // Set current node as visited
+    visited[start] = true;
+ 
+    // For every node of the graph
+    for (int i = 0; i < adj[start].size(); i++) {
+ 
+        // If some node is adjacent to the current node
+        // and it has not already been visited
+        if (adj[start][i] == 1 && (!visited[i])) {
+            dfs(i, visited);
+        }
+    }
+}
 
 #endif /* AdjMatrixGraph_hpp */
